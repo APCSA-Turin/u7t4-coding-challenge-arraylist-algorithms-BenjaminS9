@@ -16,8 +16,8 @@ public class Main{
     */
     public static ArrayList<String> insertAfterI(ArrayList<String> stringList, String str){
         for (int i = 0; i < stringList.size(); i++) {
-            if (stringList.get(i).substring(0, 1).equals("i")) {
-                stringList.add(i, str);
+            if (stringList.get(i).indexOf("i") != -1) {
+                stringList.add(i + 1, str);
                 i++;
             }
         }
@@ -103,6 +103,7 @@ public class Main{
             stringList.add(sentence.substring(0, sentence.indexOf(" ")));
             sentence = sentence.substring(sentence.indexOf(" ") + 1);
         }
+        stringList.add(sentence);
         return stringList;
     }
 
@@ -124,9 +125,11 @@ public class Main{
    *  @param wordList  arraylist of words
    */
     public static ArrayList<String> moveBWords(ArrayList<String> wordList){
+        int bIndex = 0;
         for (int i = 0; i < wordList.size(); i++) {
             if (wordList.get(i).substring(0, 1).toLowerCase().equals("b")) {
-                wordList.add(0, wordList.get(i));
+                wordList.add(bIndex, wordList.get(i));
+                bIndex++;
                 wordList.remove(i + 1);
             }
         }
@@ -179,11 +182,15 @@ public class Main{
     // swapEnds([8, 6, 7, 9, 5]) → [5, 6, 7, 9, 8]
     // swapEnds([]->[])
     public static ArrayList<Integer> swapEnds(ArrayList<Integer> list){        
-        int firstInt = list.get(0);
-        int lastInt = list.get(list.size() - 1);
-        list.set(0, lastInt);
-        list.set(list.size() - 1, firstInt);
-        return list;
+        if (list.size() > 0) {
+            int firstInt = list.get(0);
+            int lastInt = list.get(list.size() - 1);
+            list.set(0, lastInt);
+            list.set(list.size() - 1, firstInt);
+            return list;
+        } else {
+            return new ArrayList<Integer>();
+        }
     }
 
 
@@ -221,7 +228,7 @@ public class Main{
     // notAlone([3, 4], 3) → [3, 3]
     public static ArrayList<Integer> notAlone(ArrayList<Integer> list, int val){
         for (int i = 1; i < list.size() - 1; i++) {
-            if (list.get(i) != list.get(i - 1) && list.get(i) != list.get(i + 1)) {
+            if (list.get(i) == val && list.get(i) != list.get(i - 1) && list.get(i) != list.get(i + 1)) {
                 if (list.get(i - 1) > list.get(i + 1)) {
                     list.set(i, list.get(i - 1));
                 } else {
@@ -229,10 +236,10 @@ public class Main{
                 }
             }
         }
-        if (list.get(0) != list.get(1)) {
+        if (list.get(0) == val && list.get(0) < list.get(1)) {
             list.set(0, list.get(1));
         }
-        if (list.get(list.size() - 1) != list.get(list.size() - 2)) {
+        if (list.get(list.size() - 1) == val && list.get(list.size() - 1) < list.get(list.size() - 2)) {
             list.set (list.size() - 1, list.get(list.size() - 2));
         }
         return list;
@@ -269,6 +276,11 @@ public class Main{
                 i--;
             }
             if (list.get(i) == 3) {
+                if (i + 1 == list.size() - 1) {         //if the next element were to be the last element
+                    list.add(i - 1, list.get(i + 1));   //the last element would be added before the three
+                    list.remove(list.size() - 1);       //and removed from the end in order to keep the 3 at the same index
+                    i++;
+                }
                 list.add(i + 1, 4);
                 i += 2;
             }
@@ -333,8 +345,8 @@ public class Main{
         }
         //makes sure that all numbers from numList are not contained in the modes array
         for (int num : numList) {
-            if (modes.indexOf(num) == -1) { //if not all elements of numList are in modes, then modes is returned
-                return modes;
+            if (modeList.indexOf(num) == -1) { //if not all elements of numList are in modes, then modes is returned
+                return modeList;
             }
         }
         return new ArrayList<Integer>(); //if all numbers in numList is a mode, there is no mode and a blank array is returned
